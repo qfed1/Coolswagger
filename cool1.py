@@ -11,7 +11,15 @@ driver = uc.Chrome(options=options)
 
 driver.get('https://messages.google.com/web/authentication')
 
+# get the initial URL
+initial_url = driver.current_url
+
 # an infinite loop to keep the browser open
 while True:
+    # wait for 5 seconds
     time.sleep(5)
-    pass
+
+    # check if URL has changed
+    if driver.current_url != initial_url:
+        print('Link changed to:', driver.current_url)
+        initial_url = driver.current_url
