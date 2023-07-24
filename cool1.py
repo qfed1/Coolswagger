@@ -11,12 +11,6 @@ driver = uc.Chrome(options=options)
 
 driver.get('https://messages.google.com')
 
-# rest of your selenium code here
-# example: get the title of the page
-print(driver.title)
-
-import time
-time.wait(40)
-
-# remember to close the driver once done
-driver.quit()
+# an infinite loop to keep the browser open
+while True:
+    pass
