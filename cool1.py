@@ -1,18 +1,19 @@
-# Create a new instance of the Chrome driver
-from selenium import webdriver
+import undetected_chromedriver as uc
+from selenium.webdriver.common.by import By
 
+options = uc.ChromeOptions()
 
-driver = webdriver.Chrome()
+# in case you need to set a specific user agent
+options.user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'
 
+# start chrome
+driver = uc.Chrome(options=options)
 
+driver.get('https://messages.google.com')
 
-# Navigate to google.com
-driver.get("http://www.messages.google.com")
+# rest of your selenium code here
+# example: get the title of the page
+print(driver.title)
 
-# Close the driver after some delay to see the effect
-import time
-time.sleep(10)  # pause for 5 seconds
-
-# Don't forget to quit the driver after finished
+# remember to close the driver once done
 driver.quit()
-
