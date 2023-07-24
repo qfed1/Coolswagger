@@ -21,4 +21,6 @@ while True:
     # check if URL has changed to the target_url
     if driver.current_url == target_url:
         print('Link changed to:', target_url)
-        pass  # If you want to exit the loop when the URL changes to the target URL
+        # navigate to the new URL
+        driver.get('https://messages.google.com/web/conversations/new')
+        break  # If you want to exit the loop when the URL changes to the new URL
