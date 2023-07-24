@@ -15,19 +15,25 @@ driver.get('https://messages.google.com/web/authentication')
 
 target_url = 'https://messages.google.com/web/conversations'
 
+# flag to check if button has been clicked
+button_clicked = False
+
 # an infinite loop to keep the browser open
 while True:
     # wait for 5 seconds
     time.sleep(5)
 
     # check if URL has changed to the target_url
-    if driver.current_url == target_url:
+    if driver.current_url == target_url and not button_clicked:
         print('Link changed to:', target_url)
         try:
             # wait for the button to be clickable and then click it
             button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'Start chat')]")))
             button.click()
-            break
+            button_clicked = True  # set the flag to True after clicking the button
+            print('Button clicked')
         except Exception as e:
             print('Could not find or click on the button:', str(e))
-            break  # remove this line if you don't want to exit the loop when an exception occurs
+    elif button_clicked:
+        # do something after the button has been clicked, or do nothing to just keep the browser open
+        pass
