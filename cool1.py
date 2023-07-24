@@ -1,6 +1,6 @@
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
-
+import time
 options = uc.ChromeOptions()
 
 # in case you need to set a specific user agent
@@ -13,4 +13,5 @@ driver.get('https://messages.google.com')
 
 # an infinite loop to keep the browser open
 while True:
+    time.sleep(5)
     pass
