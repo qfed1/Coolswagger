@@ -33,12 +33,15 @@ send_to_button.click()
 # ... the rest of your code
 
 # input message into textarea
+# ... the rest of your code
+
+# input message into textarea
 message_input_field = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//textarea[@data-e2e-message-input-box]")))
 message_input_field.send_keys("test")
 
 # send the message
 try:
-    send_sms_button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-text-button and not(@disabled)]")))
+    send_sms_button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, "floating-button")))
     send_sms_button.click()
 except ElementNotInteractableException:
     print("Button is not interactable at the moment.")
