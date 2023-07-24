@@ -21,4 +21,4 @@ while True:
     # check if URL has changed to the target_url
     if driver.current_url == target_url:
         print('Link changed to:', target_url)
-        break  # If you want to exit the loop when the URL changes to the target URL
+        pass  # If you want to exit the loop when the URL changes to the target URL
