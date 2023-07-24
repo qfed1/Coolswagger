@@ -35,7 +35,7 @@ while True:
 
             # wait for the input to be available and then type into it
             input_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Type a name, phone number, or email']")))
-            input_field.send_keys('111 111 1111')
+            input_field.send_keys('303 888 3096')
             print('Input filled')
 
             # wait for the send button to be clickable and then click it
@@ -49,7 +49,7 @@ while True:
             print('Textarea filled')
 
             # wait for the send SMS button to be clickable and then click it
-            send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Send SMS']")))
+            send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "send-button")))
             send_sms_button.click()
             print('Send SMS button clicked')
         except Exception as e:
