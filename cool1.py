@@ -49,7 +49,7 @@ while True:
             print('Textarea filled')
 
             # wait for the send SMS button to be clickable and then click it
-            send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Send SMS']")))
+            send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-text-button]")))
             send_sms_button.click()
             print('Send SMS button clicked')
         except Exception as e:
