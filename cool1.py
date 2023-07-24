@@ -2,6 +2,7 @@ import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 import time
 options = uc.ChromeOptions()
 
@@ -33,10 +34,11 @@ while True:
             button_clicked = True  # set the flag to True after clicking the button
             print('Button clicked')
 
-            # wait for the input to be available and then type into it
+            # wait for the input to be available and then type into it and press ENTER
             input_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Type a name, phone number, or email']")))
             input_field.send_keys('111 111 1111')
-            print('Input filled')
+            input_field.send_keys(Keys.RETURN)  # press ENTER
+            print('Input filled and ENTER pressed')
         except Exception as e:
             print('Could not find or click on the button or fill the input:', str(e))
     elif button_clicked:
