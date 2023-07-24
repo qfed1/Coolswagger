@@ -11,15 +11,14 @@ driver = uc.Chrome(options=options)
 
 driver.get('https://messages.google.com/web/authentication')
 
-# get the initial URL
-initial_url = driver.current_url
+target_url = 'https://messages.google.com/web/conversations'
 
 # an infinite loop to keep the browser open
 while True:
     # wait for 5 seconds
     time.sleep(5)
 
-    # check if URL has changed
-    if driver.current_url != initial_url:
-        print('Link changed to:', driver.current_url)
-        initial_url = driver.current_url
+    # check if URL has changed to the target_url
+    if driver.current_url == target_url:
+        print('Link changed to:', target_url)
+        break  # If you want to exit the loop when the URL changes to the target URL
