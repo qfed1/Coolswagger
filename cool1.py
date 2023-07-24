@@ -1,5 +1,7 @@
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 options = uc.ChromeOptions()
 
@@ -21,6 +23,11 @@ while True:
     # check if URL has changed to the target_url
     if driver.current_url == target_url:
         print('Link changed to:', target_url)
-        # navigate to the new URL
-        driver.get('https://messages.google.com/web/conversations/new')
-        break  # If you want to exit the loop when the URL changes to the new URL
+        try:
+            # wait for the button to be clickable and then click it
+            button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[contains(text(), 'Start chat')]")))
+            button.click()
+            break
+        except Exception as e:
+            print('Could not find or click on the button:', str(e))
+            break  # remove this line if you don't want to exit the loop when an exception occurs
