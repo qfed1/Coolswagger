@@ -32,8 +32,13 @@ while True:
             button.click()
             button_clicked = True  # set the flag to True after clicking the button
             print('Button clicked')
+
+            # wait for the input to be available and then type into it
+            input_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Type a name, phone number, or email']")))
+            input_field.send_keys('111 111 1111')
+            print('Input filled')
         except Exception as e:
-            print('Could not find or click on the button:', str(e))
+            print('Could not find or click on the button or fill the input:', str(e))
     elif button_clicked:
         # do something after the button has been clicked, or do nothing to just keep the browser open
         pass
