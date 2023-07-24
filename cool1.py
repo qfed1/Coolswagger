@@ -49,8 +49,9 @@ while True:
             print('Textarea filled')
 
             # wait for the send SMS button to be clickable and then click it
-            send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.send-button.mdc-icon-button.mat-mdc-icon-button.mat-unthemed.mat-mdc-button-base.ng-star-inserted')))
+            send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, 'send-button')))
             send_sms_button.click()
+
             print('Send SMS button clicked')
         except Exception as e:
             print('Could not find or click on the button or fill the input or textarea:', str(e))
