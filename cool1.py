@@ -42,6 +42,11 @@ while True:
             send_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-to-button]")))
             send_button.click()
             print('Send button clicked')
+
+            # wait for the textarea to be available and then type into it
+            textarea_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//textarea[@placeholder='Text message']")))
+            textarea_field.send_keys('test')
+            print('Textarea filled')
         except Exception as e:
             print('Could not find or click on the button or fill the input:', str(e))
     elif button_clicked:
