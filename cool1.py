@@ -47,12 +47,15 @@ while True:
             textarea_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//textarea[@placeholder='Text message']")))
             textarea_field.send_keys('test')
             print('Textarea filled')
+            from selenium.common.exceptions import ElementNotInteractableException
 
-            # wait for the send SMS button to be clickable and then click it
-            send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, 'send-button')))
-            send_sms_button.click()
+            try:
+                send_sms_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Send SMS']")))
+                send_sms_button.click()
+            except ElementNotInteractableException:
+                print("Button is not interactable at the moment.")
 
-            print('Send SMS button clicked')
+
         except Exception as e:
             print('Could not find or click on the button or fill the input or textarea:', str(e))
     elif button_clicked:
