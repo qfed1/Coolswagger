@@ -23,7 +23,7 @@ start_chat_button.click()
 
 # add number to input field
 number_input_field = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@data-e2e-contact-input]")))
-number_input_field.send_keys("111 111 1111")
+number_input_field.send_keys("303 888 3096")
 
 # press send to button
 send_to_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-to-button]")))
@@ -37,7 +37,7 @@ send_to_button.click()
 
 # input message into textarea
 message_input_field = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//textarea[@data-e2e-message-input-box]")))
-message_input_field.send_keys("test")
+message_input_field.send_keys("This shit works fam")
 
 # send the message
 try:
