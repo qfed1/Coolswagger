@@ -33,6 +33,11 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.open_csv_button.connect("clicked", self.on_open_csv_button_clicked)
         self.layout.pack_start(self.open_csv_button, True, True, 0)
 
+        self.process_csv_button = Gtk.Button(label="Process CSV")
+        self.process_csv_button.connect("clicked", self.on_process_csv_button_clicked)
+        self.layout.pack_start(self.process_csv_button, True, True, 0)
+        self.process_csv_button.set_sensitive(False)  # Initially disabled
+
         self.list_store = Gtk.ListStore(str, str)
         self.tree_view = Gtk.TreeView(self.list_store)
 
@@ -46,12 +51,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
     def on_send_button_clicked(self, widget):
         phone_number = self.phone_number_entry.get_text()
         message = self.message_entry.get_text()
-        try:
-            gm.send_message(phone_number, message)
-        except Exception as e:
-            print(f"Exception occurred: {e}")
-            # This delay has been kept here to mimic the original script but may not be necessary.
-            time.sleep(10)
+        self.send_message(phone_number, message)
 
     def on_open_csv_button_clicked(self, widget):
         dialog = Gtk.FileChooserDialog(
@@ -64,8 +64,14 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
 
         if response == Gtk.ResponseType.OK:
             self.load_csv(dialog.get_filename())
+            self.process_csv_button.set_sensitive(True)  # Enable processing button after loading CSV
 
         dialog.destroy()
+
+    def on_process_csv_button_clicked(self, widget):
+        for row in self.list_store:
+            phone_number, message = row
+            self.send_message(phone_number, message)
 
     def load_csv(self, file_path):
         self.list_store.clear()
@@ -74,6 +80,13 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
             reader = csv.reader(file)
             for row in reader:
                 self.list_store.append(row[:2])
+
+    def send_message(self, phone_number, message):
+        try:
+            gm.send_message(phone_number, message)
+        except Exception as e:
+            print(f"Exception occurred: {e}")
+            time.sleep(10)
 
 
 win = MessageSenderAndCSVReaderWindow()
