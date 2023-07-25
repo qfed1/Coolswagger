@@ -14,24 +14,21 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         Gtk.Window.__init__(self, title="Google Message Sender and CSV Reader")
         self.sent_messages_file = "sent_messages.csv"
 
-        # If the sent messages file doesn't exist, create it
         if not os.path.exists(self.sent_messages_file):
             with open(self.sent_messages_file, 'w') as f:
                 writer = csv.writer(f)
                 writer.writerow(['Phone Number', 'Message'])
 
-        # Load sent messages into a dictionary for fast lookup
         self.sent_messages = {}
         with open(self.sent_messages_file, 'r') as f:
             reader = csv.reader(f)
-            next(reader)  # Skip header row
+            next(reader)  
             for row in reader:
                 self.sent_messages[row[0]] = row[1]
 
         self.layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.add(self.layout)
 
-        # Message sender interface
         self.phone_number_entry = Gtk.Entry()
         self.phone_number_entry.set_text("303 888 3096")
         self.layout.pack_start(self.phone_number_entry, True, True, 0)
@@ -44,7 +41,6 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.send_button.connect("clicked", self.on_send_button_clicked)
         self.layout.pack_start(self.send_button, True, True, 0)
 
-        # CSV reader interface
         self.open_csv_button = Gtk.Button(label="Open CSV")
         self.open_csv_button.connect("clicked", self.on_open_csv_button_clicked)
         self.layout.pack_start(self.open_csv_button, True, True, 0)
@@ -52,7 +48,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.process_csv_button = Gtk.Button(label="Process CSV")
         self.process_csv_button.connect("clicked", self.on_process_csv_button_clicked)
         self.layout.pack_start(self.process_csv_button, True, True, 0)
-        self.process_csv_button.set_sensitive(False)  # Initially disabled
+        self.process_csv_button.set_sensitive(False) 
 
         self.list_store = Gtk.ListStore(str, str)
         self.tree_view = Gtk.TreeView(self.list_store)
@@ -80,7 +76,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
 
         if response == Gtk.ResponseType.OK:
             self.load_csv(dialog.get_filename())
-            self.process_csv_button.set_sensitive(True)  # Enable processing button after loading CSV
+            self.process_csv_button.set_sensitive(True)
 
         dialog.destroy()
 
@@ -113,15 +109,23 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
                 self.list_store.append(row[:2])
 
     def send_message(self, phone_number, message):
-        if phone_number in self.sent_messages and self.sent_messages[phone_number] == message:
-            print(f"Message already sent to {phone_number}. Skipping...")
-            return
+        if phone_number in self.sent_messages:
+            dialog = Gtk.MessageDialog(
+                transient_for=self,
+                flags=0,
+                message_type=Gtk.MessageType.WARNING,
+                buttons=Gtk.ButtonsType.YES_NO,
+                text=f"A message was already sent to {phone_number}. Do you still want to send another message?",
+            )
+            response = dialog.run()
+            dialog.destroy()
+
+            if response == Gtk.ResponseType.NO:
+                return
 
         try:
             gm.send_message(phone_number, message)
-            # Update sent messages dictionary
             self.sent_messages[phone_number] = message
-            # Append to sent messages file
             with open(self.sent_messages_file, 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow([phone_number, message])
