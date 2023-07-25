@@ -2,6 +2,7 @@ import gi
 import time
 import csv
 import google_messages
+import os
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
@@ -11,6 +12,21 @@ gm = google_messages.GoogleMessages()
 class MessageSenderAndCSVReaderWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Google Message Sender and CSV Reader")
+        self.sent_messages_file = "sent_messages.csv"
+
+        # If the sent messages file doesn't exist, create it
+        if not os.path.exists(self.sent_messages_file):
+            with open(self.sent_messages_file, 'w') as f:
+                writer = csv.writer(f)
+                writer.writerow(['Phone Number', 'Message'])
+
+        # Load sent messages into a dictionary for fast lookup
+        self.sent_messages = {}
+        with open(self.sent_messages_file, 'r') as f:
+            reader = csv.reader(f)
+            next(reader)  # Skip header row
+            for row in reader:
+                self.sent_messages[row[0]] = row[1]
 
         self.layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.add(self.layout)
@@ -41,7 +57,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.list_store = Gtk.ListStore(str, str)
         self.tree_view = Gtk.TreeView(self.list_store)
 
-        for i, column_title in enumerate(["Column 1", "Column 2"]):
+        for i, column_title in enumerate(["Phone Number", "Message"]):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(column_title, renderer, text=i)
             self.tree_view.append_column(column)
@@ -97,8 +113,18 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
                 self.list_store.append(row[:2])
 
     def send_message(self, phone_number, message):
+        if phone_number in self.sent_messages and self.sent_messages[phone_number] == message:
+            print(f"Message already sent to {phone_number}. Skipping...")
+            return
+
         try:
             gm.send_message(phone_number, message)
+            # Update sent messages dictionary
+            self.sent_messages[phone_number] = message
+            # Append to sent messages file
+            with open(self.sent_messages_file, 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow([phone_number, message])
         except Exception as e:
             print(f"Exception occurred: {e}")
             time.sleep(10)
