@@ -69,7 +69,22 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         dialog.destroy()
 
     def on_process_csv_button_clicked(self, widget):
-        for row in self.list_store:
+        dialog = Gtk.MessageDialog(
+            transient_for=self,
+            flags=0,
+            message_type=Gtk.MessageType.QUESTION,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text="Would you like to skip the header row of the CSV file?",
+        )
+        dialog.format_secondary_text(
+            "Please be sure to answer correctly, as the header row usually contains column names instead of valid data."
+        )
+        response = dialog.run()
+
+        start_index = 1 if response == Gtk.ResponseType.YES else 0
+        dialog.destroy()
+
+        for row in list(self.list_store)[start_index:]:
             phone_number, message = row
             self.send_message(phone_number, message)
 
