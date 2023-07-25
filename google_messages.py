@@ -1,3 +1,4 @@
+import psutil
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,25 +21,29 @@ class GoogleMessages:
             time.sleep(5)
 
     def send_message(self, phone_number, message_text):
-        # click start chat button
-        start_chat_button = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//a[@data-e2e-start-button]")))
-        start_chat_button.click()
+        while True:
+            if 'chromedriver' in (p.name() for p in psutil.process_iter()):
+                # click start chat button
+                start_chat_button = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//a[@data-e2e-start-button]")))
+                start_chat_button.click()
 
-        # add number to input field
-        number_input_field = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@data-e2e-contact-input]")))
-        number_input_field.send_keys(phone_number)
+                # add number to input field
+                number_input_field = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@data-e2e-contact-input]")))
+                number_input_field.send_keys(phone_number)
 
-        # press send to button
-        send_to_button = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-to-button]")))
-        send_to_button.click()
+                # press send to button
+                send_to_button = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-to-button]")))
+                send_to_button.click()
 
-        # input message into textarea
-        message_input_field = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//textarea[@data-e2e-message-input-box]")))
-        message_input_field.send_keys(message_text)
+                # input message into textarea
+                message_input_field = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//textarea[@data-e2e-message-input-box]")))
+                message_input_field.send_keys(message_text)
 
-        # send the message
-        try:
-            send_sms_button = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, "floating-button")))
-            send_sms_button.click()
-        except ElementNotInteractableException:
-            print("Button is not interactable at the moment.")
+                # send the message
+                try:
+                    send_sms_button = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, "floating-button")))
+                    send_sms_button.click()
+                except ElementNotInteractableException:
+                    print("Button is not interactable at the moment.")
+            else:
+                break
