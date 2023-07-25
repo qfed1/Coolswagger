@@ -4,13 +4,23 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import ElementNotInteractableException
 import time
+import os
 
 class GoogleMessages:
+    driver = None
+
     def __init__(self, url='https://messages.google.com/web/authentication'):
-        options = uc.ChromeOptions()
-        options.user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'
-        self.driver = uc.Chrome(options=options)
+        if GoogleMessages.driver is None:
+            if not self.is_driver_running():
+                options = uc.ChromeOptions()
+                options.user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'
+                GoogleMessages.driver = uc.Chrome(options=options)
         self.url = url
+
+    def is_driver_running(self):
+        # check if 'chromedriver' is currently running on system
+        output = os.popen('pgrep -x chromedriver').read()
+        return True if output else False
 
     def authenticate(self):
         self.driver.get(self.url)
