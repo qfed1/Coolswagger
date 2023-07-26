@@ -37,15 +37,15 @@ class GoogleMessages:
             number_input_field = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@data-e2e-contact-input]")))
             number_input_field.send_keys(phone_number)
 
-            # press enter in the input field
-            number_input_field.send_keys(Keys.RETURN)
+            # press send to button
+            send_to_button = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-to-button]")))
+            send_to_button.click()
 
             # input message into textarea
             message_input_field = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//textarea[@data-e2e-message-input-box]")))
             message_input_field.send_keys(message_text)
 
-            # send the message
-            send_sms_button = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, "floating-button")))
-            send_sms_button.click()
+            # send the message with ENTER key
+            message_input_field.send_keys(Keys.ENTER)
         except Exception as e:
             print(f"Exception occurred: {e}")
