@@ -2,7 +2,6 @@ import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotInteractableException
 import time
 
@@ -37,8 +36,9 @@ class GoogleMessages:
             number_input_field = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@data-e2e-contact-input]")))
             number_input_field.send_keys(phone_number)
 
-            # press enter in the input field
-            number_input_field.send_keys(Keys.RETURN)
+            # press send to button
+            send_to_button = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-e2e-send-to-button]")))
+            send_to_button.click()
 
             # input message into textarea
             message_input_field = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//textarea[@data-e2e-message-input-box]")))
