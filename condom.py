@@ -1,6 +1,7 @@
 import undetected_chromedriver.v2 as uc
 import random
 import string
+import time  # Importing time module
 
 def random_string(length=10):
     letters = string.ascii_lowercase
@@ -27,7 +28,8 @@ driver = uc.Chrome(options=options)
 # Open some website
 driver.get('https://www.google.com')
 
-# Your web automation tasks here
+# Wait for 30 seconds
+time.sleep(30)
 
 # Finally, close the browser
 driver.quit()
