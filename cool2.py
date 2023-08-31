@@ -10,52 +10,16 @@ from gi.repository import Gtk, Gdk
 gm = google_messages.GoogleMessages()
 
 class MessageSenderAndCSVReaderWindow(Gtk.Window):
+    
+        # ... (previous code)
+
     def __init__(self):
-        Gtk.Window.__init__(self, title="Google Message Sender and CSV Reader")
-        self.sent_messages_file = "sent_messages.csv"
+        # ... (previous code)
+        
+        # Add this line to initialize a list to store the CSV data
+        self.csv_data = []
 
-        if not os.path.exists(self.sent_messages_file):
-            with open(self.sent_messages_file, 'w') as f:
-                writer = csv.writer(f)
-                writer.writerow(['Phone Number', 'Message'])
-
-        self.sent_messages = {}
-        with open(self.sent_messages_file, 'r') as f:
-            reader = csv.reader(f)
-            next(reader)
-            for row in reader:
-                self.sent_messages[row[0]] = row[1]
-
-        self.layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        self.add(self.layout)
-
-        self.phone_number_entry = Gtk.Entry()
-        self.phone_number_entry.set_text("303 888 3096")
-        self.layout.pack_start(self.phone_number_entry, True, True, 0)
-
-        self.message_entry = Gtk.Entry()
-        self.message_entry.set_text("This works fam")
-        self.layout.pack_start(self.message_entry, True, True, 0)
-
-        self.send_button = Gtk.Button(label="Send Message")
-        self.send_button.connect("clicked", self.on_send_button_clicked)
-        self.layout.pack_start(self.send_button, True, True, 0)
-
-        self.open_csv_button = Gtk.Button(label="Open CSV")
-        self.open_csv_button.connect("clicked", self.on_open_csv_button_clicked)
-        self.layout.pack_start(self.open_csv_button, True, True, 0)
-
-        self.process_csv_button = Gtk.Button(label="Process CSV")
-        self.process_csv_button.connect("clicked", self.on_process_csv_button_clicked)
-        self.layout.pack_start(self.process_csv_button, True, True, 0)
-        self.process_csv_button.set_sensitive(False) 
-
-        # Removed the CSV table display here
-
-    def on_send_button_clicked(self, widget):
-        phone_number = self.phone_number_entry.get_text()
-        message = self.message_entry.get_text()
-        self.send_message(phone_number, message)
+        # ... (rest of the code)
 
     def on_open_csv_button_clicked(self, widget):
         dialog = Gtk.FileChooserDialog(
@@ -71,6 +35,14 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
             self.process_csv_button.set_sensitive(True)
 
         dialog.destroy()
+
+    def load_csv(self, file_path):
+        self.csv_data.clear()  # Clear the existing data
+
+        with open(file_path, "r") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                self.csv_data.append(row[:2])  # Add the data to self.csv_data
 
     def on_process_csv_button_clicked(self, widget):
         dialog = Gtk.MessageDialog(
@@ -88,9 +60,12 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         start_index = 1 if response == Gtk.ResponseType.YES else 0
         dialog.destroy()
 
-        for row in list(self.list_store)[start_index:]:
+        for row in self.csv_data[start_index:]:  # Use self.csv_data instead of self.list_store
             phone_number, message = row
             self.send_message(phone_number, message)
+
+    # ... (rest of your code)
+
 
     def load_csv(self, file_path):
         self.list_store.clear()
