@@ -73,9 +73,10 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
 
     def on_process_csv_button_clicked(self, widget):
         for index, row in self.df.iterrows():
-            phone_number = row['Phone Number']
-            message = row['Message']
-            self.send_message(phone_number, message)
+            phone_number = row.iloc[0]  # First column
+            message = row.iloc[1]  # Second column
+            self.send_message(str(phone_number), str(message))
+
 
     def load_csv(self, file_path):
         self.df = pd.read_csv(file_path)
