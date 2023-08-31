@@ -22,7 +22,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.sent_messages = {}
         with open(self.sent_messages_file, 'r') as f:
             reader = csv.reader(f)
-            next(reader)  
+            next(reader)
             for row in reader:
                 self.sent_messages[row[0]] = row[1]
 
@@ -50,15 +50,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.layout.pack_start(self.process_csv_button, True, True, 0)
         self.process_csv_button.set_sensitive(False) 
 
-        #self.list_store = Gtk.ListStore(str, str)
-        #self.tree_view = Gtk.TreeView(self.list_store)
-
-        for i, column_title in enumerate(["Phone Number", "Message"]):
-            renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn(column_title, renderer, text=i)
-            self.tree_view.append_column(column)
-
-        self.layout.pack_start(self.tree_view, True, True, 0)
+        # Removed the CSV table display here
 
     def on_send_button_clicked(self, widget):
         phone_number = self.phone_number_entry.get_text()
