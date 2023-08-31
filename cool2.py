@@ -10,9 +10,6 @@ from gi.repository import Gtk, Gdk
 gm = google_messages.GoogleMessages()
 
 class MessageSenderAndCSVReaderWindow(Gtk.Window):
-    
-        # ... (previous code)
-
     def __init__(self):
         # ... (previous code)
         
