@@ -1,6 +1,7 @@
 import gi
 import time
 import csv
+import pandas as pd
 import google_messages
 import os
 
@@ -13,7 +14,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Google Message Sender and CSV Reader")
         self.sent_messages_file = "sent_messages.csv"
-
+        
         if not os.path.exists(self.sent_messages_file):
             with open(self.sent_messages_file, 'w') as f:
                 writer = csv.writer(f)
@@ -48,7 +49,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.process_csv_button = Gtk.Button(label="Process CSV")
         self.process_csv_button.connect("clicked", self.on_process_csv_button_clicked)
         self.layout.pack_start(self.process_csv_button, True, True, 0)
-        self.process_csv_button.set_sensitive(False)
+        self.process_csv_button.set_sensitive(False) 
 
     def on_send_button_clicked(self, widget):
         phone_number = self.phone_number_entry.get_text()
@@ -71,27 +72,13 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         dialog.destroy()
 
     def on_process_csv_button_clicked(self, widget):
-        dialog = Gtk.MessageDialog(
-            transient_for=self,
-            flags=0,
-            message_type=Gtk.MessageType.QUESTION,
-            buttons=Gtk.ButtonsType.YES_NO,
-            text="Would you like to skip the header row of the CSV file?",
-        )
-        dialog.format_secondary_text(
-            "Please be sure to answer correctly, as the header row usually contains column names instead of valid data."
-        )
-        response = dialog.run()
-
-        start_index = 1 if response == Gtk.ResponseType.YES else 0
-        dialog.destroy()
-
-        # The list_store is removed, so you'll need to implement your own data structure here
-        # to keep track of the phone numbers and messages.
+        for index, row in self.df.iterrows():
+            phone_number = row['Phone Number']
+            message = row['Message']
+            self.send_message(phone_number, message)
 
     def load_csv(self, file_path):
-        # The list_store is removed, so you'll need to implement your own data structure here
-        # to keep track of the phone numbers and messages.
+        self.df = pd.read_csv(file_path)
 
     def send_message(self, phone_number, message):
         if phone_number in self.sent_messages:
@@ -100,7 +87,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
                 flags=0,
                 message_type=Gtk.MessageType.WARNING,
                 buttons=Gtk.ButtonsType.YES_NO,
-                text=f"A message was already sent to {phone_number}. Do you still want to send another message?"
+                text=f"A message was already sent to {phone_number}. Do you still want to send another message?",
             )
             response = dialog.run()
             dialog.destroy()
@@ -116,7 +103,6 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
                 writer.writerow([phone_number, message])
         except Exception as e:
             print(f"Exception occurred: {e}")
-            time.sleep(10)
 
 win = MessageSenderAndCSVReaderWindow()
 win.connect("destroy", Gtk.main_quit)
