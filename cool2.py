@@ -50,13 +50,13 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.layout.pack_start(self.process_csv_button, True, True, 0)
         self.process_csv_button.set_sensitive(False) 
 
-        self.list_store = Gtk.ListStore(str, str)
-        self.tree_view = Gtk.TreeView(self.list_store)
+        #self.list_store = Gtk.ListStore(str, str)
+        #self.tree_view = Gtk.TreeView(self.list_store)
 
-        for i, column_title in enumerate(["Phone Number", "Message"]):
-            renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn(column_title, renderer, text=i)
-            self.tree_view.append_column(column)
+        #for i, column_title in enumerate(["Phone Number", "Message"]):
+        #    renderer = Gtk.CellRendererText()
+        #    column = Gtk.TreeViewColumn(column_title, renderer, text=i)
+        #    self.tree_view.append_column(column)
 
         self.layout.pack_start(self.tree_view, True, True, 0)
 
