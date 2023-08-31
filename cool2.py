@@ -58,7 +58,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         #    column = Gtk.TreeViewColumn(column_title, renderer, text=i)
         #    self.tree_view.append_column(column)
 
-        self.layout.pack_start(self.tree_view, True, True, 0)
+        #self.layout.pack_start(self.tree_view, True, True, 0)
 
     def on_send_button_clicked(self, widget):
         phone_number = self.phone_number_entry.get_text()
