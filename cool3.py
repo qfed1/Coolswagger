@@ -22,7 +22,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.sent_messages = {}
         with open(self.sent_messages_file, 'r') as f:
             reader = csv.reader(f)
-            next(reader)  
+            next(reader)
             for row in reader:
                 self.sent_messages[row[0]] = row[1]
 
@@ -48,7 +48,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
         self.process_csv_button = Gtk.Button(label="Process CSV")
         self.process_csv_button.connect("clicked", self.on_process_csv_button_clicked)
         self.layout.pack_start(self.process_csv_button, True, True, 0)
-        self.process_csv_button.set_sensitive(False) 
+        self.process_csv_button.set_sensitive(False)
 
     def on_send_button_clicked(self, widget):
         phone_number = self.phone_number_entry.get_text()
@@ -100,7 +100,7 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
                 flags=0,
                 message_type=Gtk.MessageType.WARNING,
                 buttons=Gtk.ButtonsType.YES_NO,
-                text=f"A message was already sent to {phone_number}. Do you still want to send another message?",
+                text=f"A message was already sent to {phone_number}. Do you still want to send another message?"
             )
             response = dialog.run()
             dialog.destroy()
