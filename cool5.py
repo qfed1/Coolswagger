@@ -73,10 +73,17 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
 
     def on_process_csv_button_clicked(self, widget):
         start_row = int(input("Enter the row number to start from (0-based index): "))
-        for index, row in self.df.iloc[start_row:].iterrows():
-            phone_number = row.iloc[0]  # First column
-            message = row.iloc[1]  # Second column
-            self.send_message(str(phone_number), str(message))
+        while True:
+            try:
+                for index, row in self.df.iloc[start_row:].iterrows():
+                    phone_number = row.iloc[0]  # First column
+                    message = row.iloc[1]  # Second column
+                    self.send_message(str(phone_number), str(message))
+            except Exception as e:
+                print(f"Exception occurred: {e}")
+                input("Press ENTER to continue...")
+            else:
+                break
 
     def load_csv(self, file_path):
         self.df = pd.read_csv(file_path)
@@ -98,15 +105,11 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
 
         try:
             gm.send_message(phone_number, message)
-            # Only update the internal dictionary and CSV file if the message was successfully sent.
             self.sent_messages[phone_number] = message
             with open(self.sent_messages_file, 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow([phone_number, message])
-            
-            # Print the last successful number sent to the console.
             print(f"Successfully sent message to: {phone_number}")
-
         except Exception as e:
             print(f"Exception occurred: {e}")
 
