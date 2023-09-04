@@ -81,35 +81,34 @@ class MessageSenderAndCSVReaderWindow(Gtk.Window):
     def load_csv(self, file_path):
         self.df = pd.read_csv(file_path)
 
-def send_message(self, phone_number, message):
-    if phone_number in self.sent_messages:
-        dialog = Gtk.MessageDialog(
-            transient_for=self,
-            flags=0,
-            message_type=Gtk.MessageType.WARNING,
-            buttons=Gtk.ButtonsType.YES_NO,
-            text=f"A message was already sent to {phone_number}. Do you still want to send another message?",
-        )
-        response = dialog.run()
-        dialog.destroy()
+    def send_message(self, phone_number, message):
+        if phone_number in self.sent_messages:
+            dialog = Gtk.MessageDialog(
+                transient_for=self,
+                flags=0,
+                message_type=Gtk.MessageType.WARNING,
+                buttons=Gtk.ButtonsType.YES_NO,
+                text=f"A message was already sent to {phone_number}. Do you still want to send another message?",
+            )
+            response = dialog.run()
+            dialog.destroy()
 
-        if response == Gtk.ResponseType.NO:
-            return
+            if response == Gtk.ResponseType.NO:
+                return
 
-    try:
-        gm.send_message(phone_number, message)
-        # Only update the internal dictionary and CSV file if the message was successfully sent.
-        self.sent_messages[phone_number] = message
-        with open(self.sent_messages_file, 'a') as f:
-            writer = csv.writer(f)
-            writer.writerow([phone_number, message])
-        
-        # Print the last successful number sent to the console.
-        print(f"Successfully sent message to: {phone_number}")
+        try:
+            gm.send_message(phone_number, message)
+            # Only update the internal dictionary and CSV file if the message was successfully sent.
+            self.sent_messages[phone_number] = message
+            with open(self.sent_messages_file, 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow([phone_number, message])
+            
+            # Print the last successful number sent to the console.
+            print(f"Successfully sent message to: {phone_number}")
 
-    except Exception as e:
-        print(f"Exception occurred: {e}")
-
+        except Exception as e:
+            print(f"Exception occurred: {e}")
 
 win = MessageSenderAndCSVReaderWindow()
 win.connect("destroy", Gtk.main_quit)
